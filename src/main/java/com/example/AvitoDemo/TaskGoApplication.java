@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class AvitoDemoApplication {
+public class TaskGoApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(AvitoDemoApplication.class, args);
+		SpringApplication.run(TaskGoApplication.class, args);
 	}
 
 }
