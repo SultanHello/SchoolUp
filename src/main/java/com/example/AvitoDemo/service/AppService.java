@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 public class AppService {
     @Autowired
     private final UserRepository userRepository;
-
     public String registration(Register registerUser){
          User user  = User.builder()
                 .email(registerUser.getEmail())
