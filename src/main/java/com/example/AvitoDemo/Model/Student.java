@@ -4,26 +4,30 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.crypto.SecretKey;
 import java.util.Collection;
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
+@Entity
+@Table(name = "students")
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@MappedSuperclass
-public class User implements UserDetails {
+public class Student extends User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long id;
+    private Long id;
+    @ManyToMany(mappedBy = "courseOwner")
+    private List<Subject> subjects;
+
     private String name;
     private String surname;
-    @Column(name = "email", unique = true)
     private String email;
     private String password;
     private RoleStudent role;
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -40,23 +44,27 @@ public class User implements UserDetails {
         return email;
     }
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
+//    @Override
+//    public boolean isAccountNonExpired() {
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean isAccountNonLocked() {
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean isCredentialsNonExpired() {
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean isEnabled() {
+//        return true;
+//    }
 
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
 
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
 
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
+
 }
