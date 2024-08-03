@@ -1,9 +1,11 @@
 package com.example.AvitoDemo.service;
 
+import com.example.AvitoDemo.Exeptions.StudentNotFoundExceptions;
 import com.example.AvitoDemo.Model.*;
 import com.example.AvitoDemo.repasitory.StudentRepository;
 import com.example.AvitoDemo.repasitory.TeacherRepository;
 import lombok.AllArgsConstructor;
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -11,10 +13,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import static com.fasterxml.jackson.databind.cfg.DefaultCacheProvider.builder;
-
 @Service
 @AllArgsConstructor
+
 
 public class AppService {
     @Autowired
@@ -24,6 +25,7 @@ public class AppService {
     @Autowired
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
+
     private  final AuthenticationManager manager;
     public String getName(String email){
         Student student = studentRepository.findByEmail(email);
@@ -40,14 +42,20 @@ public class AppService {
 
     }
 
-    public String registrationStudent(Register registerUser){
-        return jwtService.generateToken(studentRepository.save(userToStudent(registerUser)));
+    public String registrationStudent(Register registerUser) {
+        Student student = userToStudent(registerUser);
+        System.out.println("Student to save: " + student);
+        Student savedStudent = studentRepository.save(student);
+        System.out.println("Saved Student: " + savedStudent);
+        String token = jwtService.generateToken(savedStudent);
+        System.out.println("Generated Token: " + token);
+        return token;
     }
     public String registrationTeacher(Register registerUser){
-        return jwtService.generateToken(studentRepository.save(userToStudent(registerUser)));
+        return jwtService.generateToken(teacherRepository.save(userToTeacher(registerUser)));
     }
 
-    public String auth(Login login){
+    public String auth(Login login) throws BadRequestException {
         manager.authenticate(new UsernamePasswordAuthenticationToken(login.getEmail(),login.getPassword()));
         Student student = studentRepository.findByEmail(login.getEmail());
         Teacher teacher = teacherRepository.findByEmail(login.getEmail());
@@ -57,16 +65,23 @@ public class AppService {
         }else if(teacher!=null){
             return jwtService.generateToken(teacher);
 
+        }else {
+            throw new BadRequestException("User not found");
         }
-        return null;
 
-
-
+    }
+    public void deleteStudent(Long studentId)  {
+        if(!studentRepository.existsById(studentId)){
+            throw new UsernameNotFoundException("Error");
+        }
+        studentRepository.deleteById(studentId);
 
     }
 
 
-    private Student userToStudent(Register user){
+
+
+    public Student userToStudent(Register user){
         return Student
                 .builder()
                 .name(user.getName())
@@ -75,6 +90,22 @@ public class AppService {
                 .password(passwordEncoder.encode(user.getPassword()))
                 .email(user.getEmail()).build();
     }
+    public Teacher userToTeacher(Register user){
+        return Teacher
+                .builder()
+                .name(user.getName())
+                .role(RoleStudent.DEFAULT)
+                .surname(user.getSurname())
+                .password(passwordEncoder.encode(user.getPassword()))
+                .email(user.getEmail()).build();
+    }
+    public Student addStudent(Student student){
+        return studentRepository.save(student);
+
+
+    }
+
+
 
 
 

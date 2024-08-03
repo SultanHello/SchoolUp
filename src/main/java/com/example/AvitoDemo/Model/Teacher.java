@@ -1,11 +1,13 @@
 package com.example.AvitoDemo.Model;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 @Table(name = "teachers")
 public class Teacher extends User{

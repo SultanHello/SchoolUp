@@ -4,6 +4,7 @@ import com.example.AvitoDemo.Model.Login;
 import com.example.AvitoDemo.Model.Register;
 import com.example.AvitoDemo.service.AppService;
 import lombok.AllArgsConstructor;
+import org.apache.coyote.BadRequestException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,7 +32,7 @@ public class AppController {
         return appService.registrationTeacher(teacher);
     }
     @PostMapping("/login")
-    public String login(@RequestBody Login login){
+    public String login(@RequestBody Login login) throws BadRequestException {
         return appService.auth(login);
     }
 
