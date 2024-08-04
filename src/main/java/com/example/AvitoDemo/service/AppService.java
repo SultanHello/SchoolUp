@@ -49,7 +49,7 @@ public class AppService {
         System.out.println("Saved Student: " + savedStudent);
         String token = jwtService.generateToken(savedStudent);
         System.out.println("Generated Token: " + token);
-        return token;
+        return tвмсoken;
     }
     public String registrationTeacher(Register registerUser){
         return jwtService.generateToken(teacherRepository.save(userToTeacher(registerUser)));
