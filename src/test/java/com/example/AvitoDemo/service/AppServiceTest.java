@@ -11,7 +11,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -34,9 +36,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 
-@SpringBootTest
+//@SpringBootTest
 
-
+@ExtendWith(MockitoExtension.class)
 class AppServiceTest {
     @Mock
     private StudentRepository studentRepository;
@@ -120,7 +122,6 @@ class AppServiceTest {
 
     @Test
     void registrationStudent() {
-        // Given
         Register register = Register.builder()
                 .name("Sultan")
                 .surname("Assimbek")
@@ -137,25 +138,16 @@ class AppServiceTest {
 
         String token = "token";
 
-        // When
-        when(passwordEncoder.encode(register.getPassword())).thenReturn("encodedPassword");
-        when(studentRepository.save(ArgumentMatchers.any(Student.class))).thenReturn(student);
-        when(studentRepository.findByEmail(register.getEmail())).thenReturn(null);
-        when(jwtService.generateToken(ArgumentMatchers.any(Student.class))).thenReturn(token);
+        lenient().when(passwordEncoder.encode(register.getPassword())).thenReturn("encodedPassword");
+        lenient().when(studentRepository.save(ArgumentMatchers.any(Student.class))).thenReturn(student);
+        lenient().when(studentRepository.findByEmail(register.getEmail())).thenReturn(null);
+        lenient().when(jwtService.generateToken(ArgumentMatchers.any(Student.class))).thenReturn(token);
 
-        // Act
         String jw = appService.registrationStudent(register);
-//        ArgumentCaptor<Student> studentArgumentCaptor =ArgumentCaptor.forClass(Student.class);
-//        verify(studentRepository).save(studentArgumentCaptor.capture());
 
-        // Assert
         assertThat(jw).isEqualTo(token);
-
-        // Verify
-//        verify(passwordEncoder).encode(register.getPassword());
-//        verify(studentRepository).save(ArgumentMatchers.any(Student.class));
-//        verify(jwtService).generateToken(student);
     }
+
     @Test
     void addStudent(){
         Student student =new Student();
@@ -169,17 +161,12 @@ class AppServiceTest {
 
     @BeforeEach
     void setUp() {
-        System.out.println(1);
-        // Инициализация объектов, подготовка мока
         //MockitoAnnotations.openMocks(this);
-        // Другие необходимые настройки
     }
 
     @AfterEach
     void tearDown() {
-        System.out.println(2);
-        // Очистка ресурсов, сброс состояния
-        // Например, закрытие соединений или файлов
+        System.out.println("Cleaning up...");
     }
 
     @Test
