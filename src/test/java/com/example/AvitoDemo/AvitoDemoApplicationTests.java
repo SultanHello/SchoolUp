@@ -14,7 +14,7 @@ class AvitoDemoApplicationTests {
 	void test(){
 		Calultor calultor = new Calultor();
 		int res = calultor.add(20,30);
-		assertThat(res).isEqualTo(52);
+		assertThat(res).isEqualTo(50);
 
 	}
 

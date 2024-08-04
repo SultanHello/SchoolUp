@@ -127,12 +127,8 @@
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.11.0</version> <!-- Проверьте, доступна ли более новая версия -->
-				<configuration>
-					<source>22</source>
-					<target>22</target>
-				</configuration>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.0.0-M5</version> <!-- Проверьте, доступна ли более новая версия -->
 			</plugin>
 		</plugins>
 	</build>
